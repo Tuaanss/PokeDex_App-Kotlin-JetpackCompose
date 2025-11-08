@@ -1,9 +1,9 @@
-package com.plcoding.jetpackcomposepokedex.pokemondetail
+package com.plcoding.pokedex.pokemondetail
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
-import com.plcoding.jetpackcomposepokedex.R
+import com.plcoding.pokedex.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +13,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CompareArrows
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -34,12 +37,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.plcoding.jetpackcomposepokedex.data.remote.responses.Pokemon
-import com.plcoding.jetpackcomposepokedex.data.remote.responses.Type
-import com.plcoding.jetpackcomposepokedex.util.Resource
-import com.plcoding.jetpackcomposepokedex.util.parseStatToAbbr
-import com.plcoding.jetpackcomposepokedex.util.parseStatToColor
-import com.plcoding.jetpackcomposepokedex.util.parseTypeToColor
+import com.plcoding.pokedex.data.remote.responses.Pokemon
+import com.plcoding.pokedex.data.remote.responses.Type
+import com.plcoding.pokedex.util.Resource
+import com.plcoding.pokedex.util.parseStatToAbbr
+import com.plcoding.pokedex.util.parseStatToColor
+import com.plcoding.pokedex.util.parseTypeToColor
 import java.util.*
 import kotlin.math.round
 
@@ -55,6 +58,8 @@ fun PokemonDetailScreen(
     val pokemonInfo = produceState<Resource<Pokemon>>(initialValue = Resource.Loading()) {
         value = viewModel.getPokemonInfo(pokemonName)
     }.value
+    
+    val isFavorite by viewModel.isFavorite.collectAsState()
     Box(modifier = Modifier
         .fillMaxSize()
         .background(dominantColor)
@@ -62,6 +67,9 @@ fun PokemonDetailScreen(
     ) {
         PokemonDetailTopSection(
             navController = navController,
+            pokemonName = pokemonName,
+            isFavorite = isFavorite,
+            onFavoriteClick = { viewModel.toggleFavorite(pokemonName) },
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.2f)
@@ -113,6 +121,9 @@ fun PokemonDetailScreen(
 @Composable
 fun PokemonDetailTopSection(
     navController: NavController,
+    pokemonName: String,
+    isFavorite: Boolean,
+    onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -127,17 +138,49 @@ fun PokemonDetailTopSection(
                 )
             )
     ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = null,
-            tint = Color.White,
+        Row(
             modifier = Modifier
-                .size(36.dp)
-                .offset(16.dp, 16.dp)
-                .clickable {
-                    navController.popBackStack()
-                }
-        )
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier
+                    .size(36.dp)
+                    .clickable {
+                        navController.popBackStack()
+                    }
+            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = "Yêu thích",
+                    tint = if (isFavorite) Color.Red else Color.White,
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clickable {
+                            onFavoriteClick()
+                        }
+                )
+                Icon(
+                    imageVector = Icons.Default.CompareArrows,
+                    contentDescription = "So sánh",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clickable {
+                            navController.navigate("pokemon_comparison_screen/$pokemonName/null")
+                        }
+                )
+            }
+        }
     }
 }
 

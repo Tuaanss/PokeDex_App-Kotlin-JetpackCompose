@@ -1,4 +1,4 @@
-package com.plcoding.jetpackcomposepokedex.ui.theme
+package com.plcoding.pokedex.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.plcoding.jetpackcomposepokedex.R
+import com.plcoding.pokedex.R
 
 val Roboto = FontFamily(
     Font(R.font.roboto_light, FontWeight.Light),

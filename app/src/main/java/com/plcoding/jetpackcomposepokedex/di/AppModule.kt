@@ -1,8 +1,8 @@
-package com.plcoding.jetpackcomposepokedex.di
+package com.plcoding.pokedex.di
 
-import com.plcoding.jetpackcomposepokedex.data.remote.PokeApi
-import com.plcoding.jetpackcomposepokedex.repository.PokemonRepository
-import com.plcoding.jetpackcomposepokedex.util.Constants.BASE_URL
+import com.plcoding.pokedex.data.remote.PokeApi
+import com.plcoding.pokedex.repository.PokemonRepository
+import com.plcoding.pokedex.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

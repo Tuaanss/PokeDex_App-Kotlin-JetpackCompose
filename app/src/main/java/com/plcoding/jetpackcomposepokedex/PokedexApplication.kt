@@ -1,4 +1,4 @@
-package com.plcoding.jetpackcomposepokedex
+package com.plcoding.pokedex
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
